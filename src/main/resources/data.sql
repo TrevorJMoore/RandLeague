@@ -1,0 +1,1 @@
+INSERT INTO CHAMPIONS(ID, Champion_name, Champion_pic) VALUES (1, 'aatrox', "images\champions\aatrox.jpg");
