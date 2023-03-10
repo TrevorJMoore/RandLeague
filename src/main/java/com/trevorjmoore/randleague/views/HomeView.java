@@ -2,6 +2,7 @@ package com.trevorjmoore.randleague.views;
 
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
@@ -21,9 +23,17 @@ import com.vaadin.flow.router.RouterLink;
 public class HomeView extends AppLayout {
 
     public HomeView() {
-        H1 title = new H1("League of Random");
-        title.getStyle().set("font-size", "var(--lumo-font-size-l)");
+        VerticalLayout pageContent = new VerticalLayout();
 
+        H1 title = new H1("Randomizer");
+        title.getStyle().set("font-size", "var(--lumo-font-size-xxl)");
+
+
+        Button generateButton = new Button("Generate");
+        pageContent.add(generateButton);
+        pageContent.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        setContent(pageContent);
         /*Tabs tabs = getTabs();
 
         H2 viewTitle = new H2("View title");
