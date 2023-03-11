@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
+@ResponseBody
 public class ItemController {
 
     @Autowired
@@ -19,7 +20,8 @@ public class ItemController {
     public List<Item> getItems(
             @RequestParam(name="name", required=false) String name,
             @RequestParam(name="cost", required = false) Integer cost) {
-        return itemRepository.findByItemName(name);
+        System.out.println("I have received the blessed name of: " + name);
+        return itemRepository.findByItemNameIgnoreCase(name);
     }
 
 }

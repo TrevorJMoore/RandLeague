@@ -3,7 +3,7 @@ package com.trevorjmoore.randleague.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name="items")
+@Table(name = "items")
 public class Item {
 
     //Item has name, description, cost, and isMythic
