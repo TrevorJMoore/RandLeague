@@ -23,4 +23,9 @@ public class ItemController {
         return itemRepository.findByItemNameIgnoreCase(name);
     }
 
+    @GetMapping("/test")
+    public List<Item> getAll() {
+        return itemRepository.findByIsMythicAndIsBoot(false, false);
+    }
+
 }

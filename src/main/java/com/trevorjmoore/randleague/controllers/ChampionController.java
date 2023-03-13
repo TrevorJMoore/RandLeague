@@ -15,8 +15,13 @@ public class ChampionController {
     private ChampionRepository championRepository;
 
     @GetMapping("/{name}")
-    public List<Champion> getChampion(@PathVariable("name") String championName) {
-        return championRepository.findByChampionName(championName);
+    public Champion getChampion(@PathVariable("name") String championName) {
+        return championRepository.findByChampionNameIgnoreCase(championName);
+    }
+
+    @GetMapping("/all")
+    public int getNumberCampions() {
+        return (int)championRepository.count();
     }
 
 }

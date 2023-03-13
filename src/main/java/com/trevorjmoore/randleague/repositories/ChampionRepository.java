@@ -9,7 +9,7 @@ public interface ChampionRepository extends CrudRepository<Champion, Integer> {
     // Champion has Integer id, String name
 
     //Generic searches
-    public List<Champion> findByChampionName(String championName);
+    public Champion findByChampionNameIgnoreCase(String championName);
 
 
 

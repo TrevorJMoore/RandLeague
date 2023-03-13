@@ -20,6 +20,9 @@ public class Rune {
     @Column
     private String runeFamily;
 
+    @Column
+    private Integer runeTier;
+
     public Integer getId() {
         return id;
     }
@@ -50,6 +53,14 @@ public class Rune {
 
     public void setRuneFamily(String runeFamily) {
         this.runeFamily = runeFamily;
+    }
+
+    public Integer getRuneTier() {
+        return runeTier;
+    }
+
+    public void setRuneTier(Integer runeTier) {
+        this.runeTier = runeTier;
     }
 
 

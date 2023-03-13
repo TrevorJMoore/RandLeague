@@ -24,6 +24,10 @@ public class Item {
     @Column
     private Boolean isMythic;
 
+    @Column
+    private Boolean isBoot;
+
+
     //Getters / Setters
     public Integer getId() {
         return id;
@@ -64,4 +68,8 @@ public class Item {
     public void setMythic(Boolean mythic) {
         isMythic = mythic;
     }
+
+    public Boolean getBoot() { return isBoot; }
+
+    public void setBoot(Boolean boot) { isBoot = boot; }
 }
