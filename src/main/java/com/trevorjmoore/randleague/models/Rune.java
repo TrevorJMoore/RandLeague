@@ -7,15 +7,12 @@ import javax.persistence.*;
 public class Rune {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer id;
 
     @Column
     private String runeName;
-
-    @Column
-    private String runeDescription;
 
     @Column
     private String runeFamily;
@@ -37,14 +34,6 @@ public class Rune {
 
     public void setRuneName(String runeName) {
         this.runeName = runeName;
-    }
-
-    public String getRuneDescription() {
-        return runeDescription;
-    }
-
-    public void setRuneDescription(String runeDescription) {
-        this.runeDescription = runeDescription;
     }
 
     public String getRuneFamily() {

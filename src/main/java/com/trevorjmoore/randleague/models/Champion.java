@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Champion {
     @Id
     @Column
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     @Column

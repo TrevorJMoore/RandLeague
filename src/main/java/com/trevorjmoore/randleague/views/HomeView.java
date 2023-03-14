@@ -86,8 +86,9 @@ public class HomeView extends AppLayout {
         Random randomNumber = new Random();
 
         //Obtain random champion
-        int champId = randomNumber.nextInt(1,(int)championRepository.count());
-        Optional<Champion> selectedChamp = championRepository.findById(champId);
+        Optional<Champion> selectedChamp = championRepository.findById(
+                randomNumber.nextInt((int)championRepository.count())
+        );
         if (!selectedChamp.isPresent()) {
             System.out.println("Error: Unspecified Champion Selected.");
             return;
@@ -102,35 +103,68 @@ public class HomeView extends AppLayout {
         List<Item> legendaries = itemRepository.findByIsMythicAndIsBoot(false, false);
 
         //Add a mythic to the items
-        selectedItems.add(mythics.get(randomNumber.nextInt(0,mythics.size())));
+        selectedItems.add(mythics.get(randomNumber.nextInt(mythics.size())));
         //Add boots to the items
-        selectedItems.add(boots.get(randomNumber.nextInt(0,boots.size())));
+        selectedItems.add(boots.get(randomNumber.nextInt(boots.size())));
 
         //Add 4 legendaries to the items
         for (int i = 0; i < 4; i++) {
             int idx;
 
             do {
-                idx = randomNumber.nextInt(0, legendaries.size());
+                idx = randomNumber.nextInt(legendaries.size());
             } while (selectedItems.contains(legendaries.get(idx)));
 
             selectedItems.add(legendaries.get(idx));
         }
 
-        //Obtain random runes
-        List<Rune> selectedRunes = new ArrayList<Rune>();
-        Optional<Rune> optionalRune = runeRepository.findById(randomNumber.nextInt(1, (int)runeRepository.count()));
-        if (!optionalRune.isPresent()) {
-            System.out.println("Error: Unspecified Rune Selected");
-            return;
+        //Obtain primary rune tree
+        List<Rune> primaryRunes = new ArrayList<Rune>();
+        List<Rune> tempRunes = runeRepository.findByRuneTier(0);
+
+        //Get keystone rune
+        primaryRunes.add(tempRunes.get(randomNumber.nextInt(tempRunes.size())));
+
+        //Obtain the last three random runes from same rune family as keystone
+        for (int i = 1; i < 4; i++) {
+            tempRunes = runeRepository.findByRuneFamilyIgnoreCaseAndRuneTier(primaryRunes.get(0).getRuneFamily(), i);
+            primaryRunes.add(tempRunes.get(randomNumber.nextInt(tempRunes.size())));
         }
-        selectedRunes.add(optionalRune.get());
-        //Obtain main tree runes from first rune
-        //What is the first rune's tier? Apply around it
         
+        //Obtain secondary rune tree
+        List<Rune> secondaryRunes = new ArrayList<Rune>();
+        //Obtain a random secondary rune family that is different from primary rune family
 
-        //System.out.println(ChampionController.getNumberCampions());
-
+        for (int i = 0; i < 2; i++) {
+            tempRunes = runeRepository.findByRuneTier(i+2);
+            int runeId;
+            if (secondaryRunes.isEmpty()) {
+                do {
+                    runeId = randomNumber.nextInt(runeRepository.findByRuneTier(i + 2).size());
+                } while (tempRunes.get(runeId).getRuneFamily().equals(primaryRunes.get(i).getRuneFamily()));
+                secondaryRunes.add(tempRunes.get(runeId));
+            }
+            else {
+                secondaryRunes.add(
+                        runeRepository.findByRuneFamilyIgnoreCaseAndRuneTier(secondaryRunes.get(0).getRuneFamily(), i+2)
+                                .get(randomNumber.nextInt(
+                                        runeRepository.findByRuneFamilyIgnoreCaseAndRuneTier(
+                                                secondaryRunes.get(0).getRuneFamily(), i+2).size()))
+                );
+            }
+        }
+        
+        //List<Rune> primaryRunes
+        //List<Rune> secondaryRunes
+        //List<Item> selectedItems
+        //Optional<Champion> selectedChampion.get()
+        System.out.println("Champion: " + selectedChamp.get().getName());
+        for (int i = 0; i < primaryRunes.size(); i++)
+            System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
+        for (int i = 0; i < secondaryRunes.size(); i++)
+            System.out.println("Secondary runes: " + secondaryRunes.get(i).getRuneName());
+        for (int i = 0; i < selectedItems.size(); i++)
+            System.out.println("Item " + i + ": " + selectedItems.get(i).getItemName());
 
         pageContent.add(new H1("Testing Testing 123"));
     }

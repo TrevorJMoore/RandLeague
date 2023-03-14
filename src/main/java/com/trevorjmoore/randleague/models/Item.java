@@ -8,15 +8,12 @@ public class Item {
 
     //Item has name, description, cost, and isMythic
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer id;
 
     @Column
     private String itemName;
-
-    @Column
-    private String itemDescription;
 
     @Column
     private Integer itemCost;
@@ -43,14 +40,6 @@ public class Item {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
-    }
-
-    public String getItemDescription() {
-        return itemDescription;
-    }
-
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
     }
 
     public Integer getItemCost() {
