@@ -7,9 +7,10 @@ import com.trevorjmoore.randleague.repositories.ChampionRepository;
 import com.trevorjmoore.randleague.repositories.ItemRepository;
 import com.trevorjmoore.randleague.repositories.RuneRepository;
 import com.trevorjmoore.randleague.repositories.SummonerRepository;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -82,18 +83,20 @@ public class HomeView extends AppLayout {
         2 Summoner Spells
         4 Main Tree Runes (1 Keystone, 1 Third, 1 Second, 1 First), 2 Secondary Tree Runes (1 Second, 1 First), and 3 Bonus Runes (1, 1, 1)
      */
-    private void generateLoadout() {
+    private Champion generateChampion() {
         Random randomNumber = new Random();
-
-        //Obtain random champion
         Optional<Champion> selectedChamp = championRepository.findById(
                 randomNumber.nextInt((int)championRepository.count())
         );
         if (!selectedChamp.isPresent()) {
             System.out.println("Error: Unspecified Champion Selected.");
-            return;
+            return null;
         }
+        return selectedChamp.get();
+    }
 
+    private List<Item> generateItems() {
+        Random randomNumber = new Random();
         //Obtain random items
         //Need to pick 1 Mythic and 1 Boot
         List<Item> selectedItems = new ArrayList<Item>();
@@ -118,6 +121,11 @@ public class HomeView extends AppLayout {
             selectedItems.add(legendaries.get(idx));
         }
 
+        return selectedItems;
+    }
+
+    private List<Rune> generatePrimaryRunes() {
+        Random randomNumber = new Random();
         //Obtain primary rune tree
         List<Rune> primaryRunes = new ArrayList<Rune>();
         List<Rune> tempRunes = runeRepository.findByRuneTier(0);
@@ -130,7 +138,12 @@ public class HomeView extends AppLayout {
             tempRunes = runeRepository.findByRuneFamilyIgnoreCaseAndRuneTier(primaryRunes.get(0).getRuneFamily(), i);
             primaryRunes.add(tempRunes.get(randomNumber.nextInt(tempRunes.size())));
         }
-        
+        return primaryRunes;
+    }
+
+    private List<Rune> generateSecondaryRunes(List<Rune> primaryRunes) {
+        Random randomNumber = new Random();
+        List<Rune> tempRunes;
         //Obtain secondary rune tree
         List<Rune> secondaryRunes = new ArrayList<Rune>();
         //Obtain a random secondary rune family that is different from primary rune family
@@ -153,12 +166,29 @@ public class HomeView extends AppLayout {
                 );
             }
         }
+        return secondaryRunes;
+    }
+
+    private void generateLoadout() {
+        /*
+        TODO: Break generateLoadout() into smaller functions
+        for generating champion, items, runes, and summoners.
+        Keeping it in one method causes readability to reduce.
+        Also the rune generation needs to be more readable.
+        Ex:*/
+        pageContent.removeAll();
+        Champion selectedChamp = generateChampion();
+        List<Item> selectedItems = generateItems();
+        List<Rune> primaryRunes = generatePrimaryRunes();
+        List<Rune> secondaryRunes = generateSecondaryRunes(primaryRunes);
+        //List<Summoner> selectedSummoners = generateSummoners();
+
         
         //List<Rune> primaryRunes
         //List<Rune> secondaryRunes
         //List<Item> selectedItems
         //Optional<Champion> selectedChampion.get()
-        System.out.println("Champion: " + selectedChamp.get().getName());
+        System.out.println("Champion: " + selectedChamp.getName());
         for (int i = 0; i < primaryRunes.size(); i++)
             System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
         for (int i = 0; i < secondaryRunes.size(); i++)
@@ -166,7 +196,18 @@ public class HomeView extends AppLayout {
         for (int i = 0; i < selectedItems.size(); i++)
             System.out.println("Item " + i + ": " + selectedItems.get(i).getItemName());
 
-        pageContent.add(new H1("Testing Testing 123"));
+        pageContent.add(new H1("Champion: " + selectedChamp.getName()));
+
+        pageContent.add(new Paragraph("Items: "));
+
+
+        for (int i = 0; i< selectedItems.size(); i++)
+            pageContent.add(new ListItem(selectedItems.get(i).getItemName()));
+
+        Button regenerateButton = new Button("Regenerate",
+                event -> generateLoadout());
+        pageContent.add(regenerateButton);
+
     }
 
     private Tabs getTabs() {

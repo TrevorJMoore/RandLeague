@@ -1,24 +1,24 @@
 --Champions--
-INSERT INTO CHAMPIONS(ID, Champion_name) VALUES (0, 'aatrox');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('ahri');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('akali');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('akshan');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('alistar');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('amumu');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('anivia');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('annie');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('aphelios');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('ashe');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('aurelion sol');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('azir');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('bard');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('bel''veth');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('blitzcrank');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('brand');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('braum');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('caitlyn');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('camille');
-INSERT INTO CHAMPIONS(Champion_name) VALUES ('cassiopeia');
+INSERT INTO CHAMPIONS(ID, Champion_name) VALUES (0, 'Aatrox');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Ahri');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Akali');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Akshan');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Alistar');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Amumu');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Anivia');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Annie');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Aphelios');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Ashe');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Aurelion sol');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Azir');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Bard');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Bel''veth');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Blitzcrank');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Brand');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Braum');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Caitlyn');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Camille');
+INSERT INTO CHAMPIONS(Champion_name) VALUES ('Cassiopeia');
 --Items--
     --Mythics--
 INSERT INTO ITEMS(ID, Item_name, Item_cost, Is_mythic, Is_boot) VALUES (0, 'Shurelya''s Battlesong', 2500, true, false);
