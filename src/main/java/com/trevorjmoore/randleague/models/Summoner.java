@@ -8,15 +8,13 @@ import javax.persistence.*;
 public class Summoner {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private Integer id;
 
     @Column
     private String summonerName;
 
-    @Column
-    private String summonerDescription;
 
     public Integer getId() {
         return id;
@@ -33,15 +31,5 @@ public class Summoner {
     public void setSummonerName(String summonerName) {
         this.summonerName = summonerName;
     }
-
-    public String getSummonerDescription() {
-        return summonerDescription;
-    }
-
-    public void setSummonerDescription(String summonerDescription) {
-        this.summonerDescription = summonerDescription;
-    }
-
-
 
 }

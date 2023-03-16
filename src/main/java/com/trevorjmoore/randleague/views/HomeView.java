@@ -3,6 +3,7 @@ package com.trevorjmoore.randleague.views;
 import com.trevorjmoore.randleague.models.Champion;
 import com.trevorjmoore.randleague.models.Item;
 import com.trevorjmoore.randleague.models.Rune;
+import com.trevorjmoore.randleague.models.Summoner;
 import com.trevorjmoore.randleague.repositories.ChampionRepository;
 import com.trevorjmoore.randleague.repositories.ItemRepository;
 import com.trevorjmoore.randleague.repositories.RuneRepository;
@@ -75,6 +76,60 @@ public class HomeView extends AppLayout {
         //setContent(content);
     }
 
+    private void generateLoadout() {
+        /*
+        TODO: Break generateLoadout() into smaller functions
+        for generating champion, items, runes, and summoners.
+        Keeping it in one method causes readability to reduce.
+        Also the rune generation needs to be more readable.
+        Ex:*/
+        pageContent.removeAll();
+        Champion selectedChamp = generateChampion();
+        List<Item> selectedItems = generateItems();
+        List<Rune> primaryRunes = generatePrimaryRunes();
+        List<Rune> secondaryRunes = generateSecondaryRunes(primaryRunes);
+        List<Summoner> selectedSummoners = generateSummoners();
+
+        
+        //List<Rune> primaryRunes
+        //List<Rune> secondaryRunes
+        //List<Item> selectedItems
+        //Optional<Champion> selectedChampion.get()
+        System.out.println("Champion: " + selectedChamp.getName());
+        for (int i = 0; i < primaryRunes.size(); i++)
+            System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
+        for (int i = 0; i < secondaryRunes.size(); i++)
+            System.out.println("Secondary runes: " + secondaryRunes.get(i).getRuneName());
+        for (int i = 0; i < selectedItems.size(); i++)
+            System.out.println("Item " + i + ": " + selectedItems.get(i).getItemName());
+
+        pageContent.add(new H1("Champion: " + selectedChamp.getName()));
+
+        pageContent.add(new Paragraph("Summoners: "));
+        for (int i = 0; i < selectedSummoners.size(); i++) {
+            pageContent.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
+        }
+
+        pageContent.add(new Paragraph("Items: "));
+
+
+        for (int i = 0; i< selectedItems.size(); i++)
+            pageContent.add(new ListItem(selectedItems.get(i).getItemName()));
+
+        pageContent.add(new Paragraph("Runes: "));
+        pageContent.add(new Paragraph("Primary Runes: " + primaryRunes.get(0).getRuneFamily()));
+        for (int i = 0; i < primaryRunes.size(); i++)
+            pageContent.add(new ListItem(primaryRunes.get(i).getRuneName()));
+        pageContent.add(new Paragraph("Secondary Runes: " + secondaryRunes.get(0).getRuneFamily()));
+        for (int i = 0; i < secondaryRunes.size(); i++)
+            pageContent.add(new ListItem(secondaryRunes.get(i).getRuneName()));
+
+
+        Button regenerateButton = new Button("Regenerate",
+                event -> generateLoadout());
+        pageContent.add(regenerateButton);
+
+    }
 
     /*
     A loadout has:
@@ -169,63 +224,21 @@ public class HomeView extends AppLayout {
         return secondaryRunes;
     }
 
-    private void generateLoadout() {
-        /*
-        TODO: Break generateLoadout() into smaller functions
-        for generating champion, items, runes, and summoners.
-        Keeping it in one method causes readability to reduce.
-        Also the rune generation needs to be more readable.
-        Ex:*/
-        pageContent.removeAll();
-        Champion selectedChamp = generateChampion();
-        List<Item> selectedItems = generateItems();
-        List<Rune> primaryRunes = generatePrimaryRunes();
-        List<Rune> secondaryRunes = generateSecondaryRunes(primaryRunes);
-        //List<Summoner> selectedSummoners = generateSummoners();
+    private List<Summoner> generateSummoners() {
+        //Select two summoners
+        List<Summoner> summonerList = new ArrayList<Summoner>();
+        Random randomNumber = new Random();
 
-        
-        //List<Rune> primaryRunes
-        //List<Rune> secondaryRunes
-        //List<Item> selectedItems
-        //Optional<Champion> selectedChampion.get()
-        System.out.println("Champion: " + selectedChamp.getName());
-        for (int i = 0; i < primaryRunes.size(); i++)
-            System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
-        for (int i = 0; i < secondaryRunes.size(); i++)
-            System.out.println("Secondary runes: " + secondaryRunes.get(i).getRuneName());
-        for (int i = 0; i < selectedItems.size(); i++)
-            System.out.println("Item " + i + ": " + selectedItems.get(i).getItemName());
+        for (int i = 0; i < 2; i++) {
+            int idx;
+            do {
+                idx = randomNumber.nextInt((int)summonerRepository.count());
+            } while (summonerList.contains(summonerRepository.findById(idx).get()));
 
-        pageContent.add(new H1("Champion: " + selectedChamp.getName()));
-
-        pageContent.add(new Paragraph("Items: "));
-
-
-        for (int i = 0; i< selectedItems.size(); i++)
-            pageContent.add(new ListItem(selectedItems.get(i).getItemName()));
-
-        Button regenerateButton = new Button("Regenerate",
-                event -> generateLoadout());
-        pageContent.add(regenerateButton);
-
+            summonerList.add(summonerRepository.findById(idx).get());
+        }
+        return summonerList;
     }
-
-    private Tabs getTabs() {
-        Tabs tabs = new Tabs();
-        tabs.getStyle().set("margin", "auto");
-        tabs.add(createTab("Dashboard"), createTab("Orders"),
-                createTab("Customers"), createTab("Products"));
-        return tabs;
-    }
-
-    private Tab createTab(String viewName) {
-        RouterLink link = new RouterLink();
-        link.add(viewName);
-        // Demo has no routes
-        // link.setRoute(viewClass.java);
-        link.setTabIndex(-1);
-
-        return new Tab(link);
-    }
+    
 
 }
