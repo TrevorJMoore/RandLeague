@@ -9,6 +9,7 @@ import com.trevorjmoore.randleague.repositories.ItemRepository;
 import com.trevorjmoore.randleague.repositories.RuneRepository;
 import com.trevorjmoore.randleague.repositories.SummonerRepository;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
@@ -19,13 +20,11 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 //Home page of the League Randomizer
 @Route("/")
@@ -45,7 +44,7 @@ public class HomeView extends AppLayout {
     public HomeView() {
 
 
-        H1 title = new H1("Randomizer");
+        H1 title = new H1("League Randomizer");
         title.getStyle().set("font-size", "var(--lumo-font-size-xxl)");
 
 
@@ -90,11 +89,90 @@ public class HomeView extends AppLayout {
         List<Rune> secondaryRunes = generateSecondaryRunes(primaryRunes);
         List<Summoner> selectedSummoners = generateSummoners();
 
-        
+        // Main webapp container
+        VerticalLayout mainContainer = new VerticalLayout();
+        // Title container (Champion: #Name)
+        HorizontalLayout titleBarContainer = new HorizontalLayout();
+
+        // Main content container
+        HorizontalLayout contentContainer = new HorizontalLayout();
+            // List of items to purchase (3x2 grid)
+            VerticalLayout itemsContainer = new VerticalLayout();
+            // List of summoners in 2x1 and runes in 2x4
+            VerticalLayout augmentsContainer = new VerticalLayout();
+                HorizontalLayout summonersContainer = new HorizontalLayout();
+                HorizontalLayout runesContainer = new HorizontalLayout();
+
+        // Footer container
+        HorizontalLayout bottomContainer = new HorizontalLayout();
+
+        titleBarContainer.add(new H1("Champion: " + selectedChamp.getName()));
+        titleBarContainer.setSizeFull();
+        titleBarContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        titleBarContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+
+
+
+        // Left hand side of webapp creation
+        VerticalLayout itemsTitle = new VerticalLayout();
+        itemsTitle.add(new H2("Items"));
+        itemsTitle.setAlignItems(FlexComponent.Alignment.CENTER);
+        itemsTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        itemsContainer.add(itemsTitle);
+
+        for (int i = 0; i< selectedItems.size(); i++)
+            itemsContainer.add(new ListItem(selectedItems.get(i).getItemName()));
+
+
+        // Right hand side of webapp creation
+        VerticalLayout summonersTitle = new VerticalLayout();
+        summonersTitle.add(new H2("Summoners"));
+        summonersTitle.setAlignItems(FlexComponent.Alignment.CENTER);
+        summonersTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        summonersContainer.add(summonersTitle);
+
+        for (int i = 0; i < selectedSummoners.size(); i++)
+            summonersContainer.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
+
+
+        VerticalLayout runesTitle = new VerticalLayout();
+        runesTitle.add(new H2("Runes"));
+        runesTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        runesContainer.add(runesTitle);
+
+        runesContainer.add(new Paragraph("Primary Runes: " + primaryRunes.get(0).getRuneFamily()));
+        for (int i = 0; i < primaryRunes.size(); i++)
+            runesContainer.add(new ListItem(primaryRunes.get(i).getRuneName()));
+        runesContainer.add(new Paragraph("Secondary Runes: " + secondaryRunes.get(0).getRuneFamily()));
+        for (int i = 0; i < secondaryRunes.size(); i++)
+            runesContainer.add(new ListItem(secondaryRunes.get(i).getRuneName()));
+
+        Button regenerateButton = new Button("Regenerate",
+                event -> generateLoadout());
+
+        augmentsContainer.add(summonersContainer);
+        augmentsContainer.add(runesContainer);
+
+        contentContainer.add(itemsContainer);
+        contentContainer.add(augmentsContainer);
+
+        bottomContainer.add(regenerateButton);
+
+        mainContainer.add(titleBarContainer);
+        mainContainer.add(contentContainer);
+        mainContainer.add(bottomContainer);
+
+
+
+        pageContent.removeAll();
+        pageContent.add(mainContainer);
+
+
         //List<Rune> primaryRunes
         //List<Rune> secondaryRunes
         //List<Item> selectedItems
         //Optional<Champion> selectedChampion.get()
+        /*
         System.out.println("Champion: " + selectedChamp.getName());
         for (int i = 0; i < primaryRunes.size(); i++)
             System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
@@ -127,7 +205,7 @@ public class HomeView extends AppLayout {
 
         Button regenerateButton = new Button("Regenerate",
                 event -> generateLoadout());
-        pageContent.add(regenerateButton);
+        pageContent.add(regenerateButton);*/
 
     }
 
@@ -239,6 +317,6 @@ public class HomeView extends AppLayout {
         }
         return summonerList;
     }
-    
+
 
 }
