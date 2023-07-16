@@ -100,8 +100,8 @@ public class HomeView extends AppLayout {
             VerticalLayout itemsContainer = new VerticalLayout();
             // List of summoners in 2x1 and runes in 2x4
             VerticalLayout augmentsContainer = new VerticalLayout();
-                HorizontalLayout summonersContainer = new HorizontalLayout();
-                HorizontalLayout runesContainer = new HorizontalLayout();
+                VerticalLayout summonersContainer = new VerticalLayout();
+                VerticalLayout runesContainer = new VerticalLayout();
 
         // Footer container
         HorizontalLayout bottomContainer = new HorizontalLayout();
@@ -114,6 +114,8 @@ public class HomeView extends AppLayout {
 
 
         // Left hand side of webapp creation
+        itemsContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+
         VerticalLayout itemsTitle = new VerticalLayout();
         itemsTitle.add(new H2("Items"));
         itemsTitle.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -125,27 +127,44 @@ public class HomeView extends AppLayout {
 
 
         // Right hand side of webapp creation
-        VerticalLayout summonersTitle = new VerticalLayout();
+        summonersContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        summonersContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        /*VerticalLayout summonersTitle = new VerticalLayout();
         summonersTitle.add(new H2("Summoners"));
         summonersTitle.setAlignItems(FlexComponent.Alignment.CENTER);
-        summonersTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        summonersContainer.add(summonersTitle);
+        summonersTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);*/
+        summonersContainer.add(new H2("Summoners"));
+
+        HorizontalLayout summonerSpellContainer = new HorizontalLayout();
 
         for (int i = 0; i < selectedSummoners.size(); i++)
-            summonersContainer.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
-
+            summonerSpellContainer.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
+        summonersContainer.add(summonerSpellContainer);
 
         VerticalLayout runesTitle = new VerticalLayout();
         runesTitle.add(new H2("Runes"));
         runesTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        runesTitle.setAlignItems(FlexComponent.Alignment.CENTER);
         runesContainer.add(runesTitle);
 
-        runesContainer.add(new Paragraph("Primary Runes: " + primaryRunes.get(0).getRuneFamily()));
+
+        HorizontalLayout mainRunesContainer = new HorizontalLayout();
+        VerticalLayout primaryRunesContainer = new VerticalLayout();
+        VerticalLayout secondaryRunesContainer = new VerticalLayout();
+
+        primaryRunesContainer.add(new H3(primaryRunes.get(0).getRuneFamily()));
         for (int i = 0; i < primaryRunes.size(); i++)
-            runesContainer.add(new ListItem(primaryRunes.get(i).getRuneName()));
-        runesContainer.add(new Paragraph("Secondary Runes: " + secondaryRunes.get(0).getRuneFamily()));
+            primaryRunesContainer.add(new ListItem(primaryRunes.get(i).getRuneName()));
+        primaryRunesContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        mainRunesContainer.add(primaryRunesContainer);
+
+
+        secondaryRunesContainer.add(new H3(secondaryRunes.get(0).getRuneFamily()));
         for (int i = 0; i < secondaryRunes.size(); i++)
-            runesContainer.add(new ListItem(secondaryRunes.get(i).getRuneName()));
+            secondaryRunesContainer.add(new ListItem(secondaryRunes.get(i).getRuneName()));
+        secondaryRunesContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        mainRunesContainer.add(secondaryRunesContainer);
+        runesContainer.add(mainRunesContainer);
 
         Button regenerateButton = new Button("Regenerate",
                 event -> generateLoadout());
