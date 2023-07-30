@@ -20,15 +20,22 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+
+// Work on splitting the services from the view portion.
+// Didn't realize we could use different scopes.
+// https://vaadin.com/docs/latest/integrations/spring/scopes
 //Home page of the League Randomizer
 @Route("/")
 @RestController
+@UIScope
 public class HomeView extends AppLayout {
 
     @Autowired
@@ -89,6 +96,9 @@ public class HomeView extends AppLayout {
         List<Rune> secondaryRunes = generateSecondaryRunes(primaryRunes);
         List<Summoner> selectedSummoners = generateSummoners();
 
+
+
+        // ~~~~~~~~~~~ Home View ~~~~~~~~~~~~
         // Main webapp container
         VerticalLayout mainContainer = new VerticalLayout();
         // Title container (Champion: #Name)
@@ -98,13 +108,24 @@ public class HomeView extends AppLayout {
         HorizontalLayout contentContainer = new HorizontalLayout();
             // List of items to purchase (3x2 grid)
             VerticalLayout itemsContainer = new VerticalLayout();
+                VerticalLayout itemsTitle = new VerticalLayout();
             // List of summoners in 2x1 and runes in 2x4
             VerticalLayout augmentsContainer = new VerticalLayout();
                 VerticalLayout summonersContainer = new VerticalLayout();
+                    HorizontalLayout summonerSpellContainer = new HorizontalLayout();
                 VerticalLayout runesContainer = new VerticalLayout();
+                    HorizontalLayout mainRunesContainer = new HorizontalLayout();
+                        VerticalLayout primaryRunesContainer = new VerticalLayout();
+                        VerticalLayout secondaryRunesContainer = new VerticalLayout();
+
 
         // Footer container
         HorizontalLayout bottomContainer = new HorizontalLayout();
+
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
         titleBarContainer.add(new H1("Champion: " + selectedChamp.getName()));
         titleBarContainer.setSizeFull();
@@ -116,7 +137,7 @@ public class HomeView extends AppLayout {
         // Left hand side of webapp creation
         itemsContainer.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        VerticalLayout itemsTitle = new VerticalLayout();
+
         itemsTitle.add(new H2("Items"));
         itemsTitle.setAlignItems(FlexComponent.Alignment.CENTER);
         itemsTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -135,22 +156,17 @@ public class HomeView extends AppLayout {
         summonersTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);*/
         summonersContainer.add(new H2("Summoners"));
 
-        HorizontalLayout summonerSpellContainer = new HorizontalLayout();
+
 
         for (int i = 0; i < selectedSummoners.size(); i++)
             summonerSpellContainer.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
         summonersContainer.add(summonerSpellContainer);
 
-        VerticalLayout runesTitle = new VerticalLayout();
-        runesTitle.add(new H2("Runes"));
-        runesTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        runesTitle.setAlignItems(FlexComponent.Alignment.CENTER);
-        runesContainer.add(runesTitle);
+
+        runesContainer.add(new H2("Runes"));
 
 
-        HorizontalLayout mainRunesContainer = new HorizontalLayout();
-        VerticalLayout primaryRunesContainer = new VerticalLayout();
-        VerticalLayout secondaryRunesContainer = new VerticalLayout();
+
 
         primaryRunesContainer.add(new H3(primaryRunes.get(0).getRuneFamily()));
         for (int i = 0; i < primaryRunes.size(); i++)
@@ -169,6 +185,7 @@ public class HomeView extends AppLayout {
         Button regenerateButton = new Button("Regenerate",
                 event -> generateLoadout());
 
+        augmentsContainer.setSizeFull();
         augmentsContainer.add(summonersContainer);
         augmentsContainer.add(runesContainer);
 
@@ -181,6 +198,9 @@ public class HomeView extends AppLayout {
         mainContainer.add(contentContainer);
         mainContainer.add(bottomContainer);
 
+
+        // Margin removal
+        mainContainer.setSpacing(false);
 
 
         pageContent.removeAll();
