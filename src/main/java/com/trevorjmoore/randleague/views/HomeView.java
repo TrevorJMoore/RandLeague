@@ -20,6 +20,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -48,6 +49,7 @@ public class HomeView extends AppLayout {
     private SummonerRepository summonerRepository;
 
     VerticalLayout pageContent = new VerticalLayout();
+
     public HomeView() {
 
 
@@ -122,15 +124,40 @@ public class HomeView extends AppLayout {
         // Footer container
         HorizontalLayout bottomContainer = new HorizontalLayout();
 
+        contentContainer.getStyle().set("padding", "0");
+
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-
+        // ~~~~~~~~ Title Bar ~~~~~~~~
         titleBarContainer.add(new H1("Champion: " + selectedChamp.getName()));
         titleBarContainer.setSizeFull();
         titleBarContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         titleBarContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        // Replaces spaces with underscores and apostrophes with nothing
+        StreamResource imageResource = new StreamResource(selectedChamp.getName().toLowerCase().replace(" ", "-").replace(
+                "'", "") + ".jpg",
+                () -> getClass().getResourceAsStream("/static/images/champions/" +
+                                selectedChamp.getName().toLowerCase().replace(" ", "-").replace(
+                                        "'", "") + ".jpg"));
+        Image champImage = new Image(imageResource, "Champion Chosen");
+        champImage.getStyle().set("position", "absolute");
+        champImage.getStyle().set("z-index", "-999");
+        champImage.getStyle().set("overflow", "hidden");
+        champImage.getStyle().set("width", "100%");
+        champImage.getStyle().set("height", "100%");
+        Div imageBlur = new Div();
+        imageBlur.getStyle().set("position", "absolute");
+        imageBlur.getStyle().set("z-index", "-998");
+        imageBlur.getStyle().set("width", "100%");
+        imageBlur.getStyle().set("height", "100%");
+        imageBlur.getStyle().set("background-color", "rgba(255,255,255,0.4)");
+
+
+        mainContainer.add(champImage);
+        mainContainer.add(imageBlur);
 
 
 
@@ -138,7 +165,10 @@ public class HomeView extends AppLayout {
         itemsContainer.setAlignItems(FlexComponent.Alignment.CENTER);
 
 
-        itemsTitle.add(new H2("Items"));
+        // ~~~~~~~ Items ~~~~~~~~
+        H2 itemsTitleText = new H2("Items");
+        itemsTitleText.getStyle().set("margin-top", "0");
+        itemsTitle.add(itemsTitleText);
         itemsTitle.setAlignItems(FlexComponent.Alignment.CENTER);
         itemsTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         itemsContainer.add(itemsTitle);
@@ -146,20 +176,21 @@ public class HomeView extends AppLayout {
         for (int i = 0; i< selectedItems.size(); i++)
             itemsContainer.add(new ListItem(selectedItems.get(i).getItemName()));
 
+        // ~~~~~~~~~~~~~~~~~~~~~~
 
         // Right hand side of webapp creation
+        // ~~~~~~~~~~ Summoners/Runes ~~~~~~~~~~~
         summonersContainer.setAlignItems(FlexComponent.Alignment.CENTER);
         summonersContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        /*VerticalLayout summonersTitle = new VerticalLayout();
-        summonersTitle.add(new H2("Summoners"));
-        summonersTitle.setAlignItems(FlexComponent.Alignment.CENTER);
-        summonersTitle.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);*/
-        summonersContainer.add(new H2("Summoners"));
+        H2 summonersTitle = new H2("Summoners");
+        summonersTitle.getStyle().set("margin-top", "0");
+        summonersContainer.add(summonersTitle);
 
 
-
+        // ~~~~~~~~~~ Summoner Spells ~~~~~~~~~~~
         for (int i = 0; i < selectedSummoners.size(); i++)
             summonerSpellContainer.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
+
         summonersContainer.add(summonerSpellContainer);
 
 
@@ -167,7 +198,7 @@ public class HomeView extends AppLayout {
 
 
 
-
+        // ~~~~~~~~~~ Runes ~~~~~~~~~~~
         primaryRunesContainer.add(new H3(primaryRunes.get(0).getRuneFamily()));
         for (int i = 0; i < primaryRunes.size(); i++)
             primaryRunesContainer.add(new ListItem(primaryRunes.get(i).getRuneName()));
@@ -182,13 +213,25 @@ public class HomeView extends AppLayout {
         mainRunesContainer.add(secondaryRunesContainer);
         runesContainer.add(mainRunesContainer);
 
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        // ~~~~~~ Regenerate Loadout Button ~~~~~~~
         Button regenerateButton = new Button("Regenerate",
                 event -> generateLoadout());
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+        runesContainer.setSizeFull();
+        primaryRunesContainer.setSizeFull();
+        secondaryRunesContainer.setSizeFull();
         augmentsContainer.setSizeFull();
         augmentsContainer.add(summonersContainer);
         augmentsContainer.add(runesContainer);
 
+
+        itemsContainer.setSizeFull();
+        contentContainer.setSizeFull();
         contentContainer.add(itemsContainer);
         contentContainer.add(augmentsContainer);
 
@@ -199,52 +242,50 @@ public class HomeView extends AppLayout {
         mainContainer.add(bottomContainer);
 
 
+
+
+
         // Margin removal
-        mainContainer.setSpacing(false);
+        pageContent.getStyle().set("padding", "0");
+        mainContainer.getStyle().set("padding", "0");
+        contentContainer.getStyle().set("padding", "0");
+        titleBarContainer.getStyle().set("padding", "0");
+        itemsContainer.getStyle().set("padding", "0");
+        itemsTitle.getStyle().set("padding", "0");
+        // List of summoners in 2x1 and runes in 2x4
+        augmentsContainer.getStyle().set("padding", "0");
+        summonersContainer.getStyle().set("padding", "0");
+        summonerSpellContainer.getStyle().set("padding", "0");
+        runesContainer.getStyle().set("padding", "0");
+        mainRunesContainer.getStyle().set("padding", "0");
+        primaryRunesContainer.getStyle().set("padding", "0");
+        secondaryRunesContainer.getStyle().set("padding", "0");
+
+        mainContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        mainContainer.setSizeFull();
+        contentContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        titleBarContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        titleBarContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        itemsContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        itemsContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        augmentsContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        itemsContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        summonersContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        summonersContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        runesContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        runesContainer.setAlignItems(FlexComponent.Alignment.CENTER);
+        mainRunesContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        mainRunesContainer.setSizeFull();
+        bottomContainer.setSizeFull();
+        bottomContainer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
 
 
         pageContent.removeAll();
         pageContent.add(mainContainer);
 
 
-        //List<Rune> primaryRunes
-        //List<Rune> secondaryRunes
-        //List<Item> selectedItems
-        //Optional<Champion> selectedChampion.get()
-        /*
-        System.out.println("Champion: " + selectedChamp.getName());
-        for (int i = 0; i < primaryRunes.size(); i++)
-            System.out.println("Primary runes: " + primaryRunes.get(i).getRuneName());
-        for (int i = 0; i < secondaryRunes.size(); i++)
-            System.out.println("Secondary runes: " + secondaryRunes.get(i).getRuneName());
-        for (int i = 0; i < selectedItems.size(); i++)
-            System.out.println("Item " + i + ": " + selectedItems.get(i).getItemName());
 
-        pageContent.add(new H1("Champion: " + selectedChamp.getName()));
-
-        pageContent.add(new Paragraph("Summoners: "));
-        for (int i = 0; i < selectedSummoners.size(); i++) {
-            pageContent.add(new Text(selectedSummoners.get(i).getSummonerName() + " "));
-        }
-
-        pageContent.add(new Paragraph("Items: "));
-
-
-        for (int i = 0; i< selectedItems.size(); i++)
-            pageContent.add(new ListItem(selectedItems.get(i).getItemName()));
-
-        pageContent.add(new Paragraph("Runes: "));
-        pageContent.add(new Paragraph("Primary Runes: " + primaryRunes.get(0).getRuneFamily()));
-        for (int i = 0; i < primaryRunes.size(); i++)
-            pageContent.add(new ListItem(primaryRunes.get(i).getRuneName()));
-        pageContent.add(new Paragraph("Secondary Runes: " + secondaryRunes.get(0).getRuneFamily()));
-        for (int i = 0; i < secondaryRunes.size(); i++)
-            pageContent.add(new ListItem(secondaryRunes.get(i).getRuneName()));
-
-
-        Button regenerateButton = new Button("Regenerate",
-                event -> generateLoadout());
-        pageContent.add(regenerateButton);*/
 
     }
 
